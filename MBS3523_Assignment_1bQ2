@@ -1,1 +1,27 @@
+import cv2
 
+def main():
+    cap = cv2.VideoCapture(0)
+
+    ret, image = cap.read()
+    cap.release()
+    if not ret:
+        print("Error: Could not capture image from the camera.")
+        return
+
+    gaussian_blur = cv2.GaussianBlur(image, (11, 11), 0)
+    hsv_image = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
+    gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    canny_edges = cv2.Canny(gray_image, 50, 150)
+
+    cv2.imshow('Original', image)
+    cv2.imshow('Gaussian Blur', gaussian_blur)
+    cv2.imshow('HSV Color Space', hsv_image)
+    cv2.imshow('Canny Edges', canny_edges)
+
+    print("Press any key in an image window to exit.")
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
+
+if name == 'main':
+    main()
