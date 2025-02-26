@@ -1,1 +1,56 @@
+import cv2
+import numpy as np
+
+
+def main():
+        cap = cv2.VideoCapture(0)
+   
+    if not cap.isOpened():
+        print("Error: Could not open webcam")
+        return
+
+    while True:       
+        ret, frame = cap.read()
+        if not ret:
+            print("Error: Can't receive frame")
+            break
+
+        
+        flip_horizontal = cv2.flip(frame, 1)  
+        flip_vertical = cv2.flip(frame, 0)  
+        flip_both = cv2.flip(frame, -1)  
+
+        
+        height, width = frame.shape[:2]
+
+        
+        combined_frame = np.zeros((height * 2, width * 2, 3), dtype=np.uint8)
+
+        
+        combined_frame[0:height, 0:width] = frame
+        
+        combined_frame[0:height, width:width * 2] = flip_horizontal
+        
+        combined_frame[height:height * 2, 0:width] = flip_vertical
+        
+        combined_frame[height:height * 2, width:width * 2] = flip_both
+        font = cv2.FONT_HERSHEY_SIMPLEX
+        cv2.putText(combined_frame, 'Original', (10, 30), font, 1, (255, 255, 255), 2)
+        cv2.putText(combined_frame, 'Horizontal Flip', (width + 10, 30), font, 1, (255, 255, 255), 2)
+        cv2.putText(combined_frame, 'Vertical Flip', (10, height + 30), font, 1, (255, 255, 255), 2)
+        cv2.putText(combined_frame, 'Both Flips', (width + 10, height + 30), font, 1, (255, 255, 255), 2)
+
+        
+        cv2.imshow('Webcam Frames', combined_frame)
+        
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            break
+    
+    cap.release()
+    cv2.destroyAllWindows()
+
+
+if __name__ == "__main__":
+    main()
+
 
